@@ -10,6 +10,15 @@
 
 <body>
     <header>
+        <div>
+            <label for="Game"><b>Select Game</b></label>
+            <select name="Game" id="Game">
+                <option value="MorbacsHuman">Morbacs Human vs Human</option>
+                <option value="MorbacsCPU">Morbacs Human vs CPU</option>
+                <option value="PowerFour">Power4</option>
+
+            </select>
+        </div>
         <h1><strong>Les morbacs, ca gratte !!!</strong></h1>
     </header>
 
@@ -17,9 +26,11 @@
         <div id="grille">
         </div>
 
+        <button id="restart-button">Start or Restart</button>
+
 
         <div id="win"></div>
-
+        <div id="imgWin"></div>
     </main>
 
 

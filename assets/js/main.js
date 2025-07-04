@@ -1,78 +1,114 @@
-const grid = [
+let grid = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
 ]
-let turn = 1
-
+let turn = 0
+let gameActive = true
 
 const container = document.getElementById("grille")
+const msgWin = document.getElementById("win")
+const restartButton = document.getElementById("restart-button")
 
-grid.forEach((row, rowIndex) => {
-    const rowDiv = document.createElement("div")
-    rowDiv.classList.add("row")
 
-    row.forEach((column, colIndex) => {
-        const columnDiv = document.createElement("div")
-        columnDiv.classList.add("column")
-        rowDiv.appendChild(columnDiv)
-        columnDiv.addEventListener('click', () => {
-            
-            if (columnDiv.textContent == "") {
-                play(columnDiv, rowIndex, colIndex)
+function generate() {
+    container.innerHTML = ""
+    grid.forEach((row, rowIndex) => {
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row")
 
-            }
-
+        row.forEach((column, colIndex) => {
+            const columnDiv = document.createElement("div")
+            columnDiv.classList.add("column")
+            rowDiv.appendChild(columnDiv)
+            columnDiv.addEventListener('click', () => {
+                if (gameActive && columnDiv.innerHTML === "") {
+                    play(columnDiv, rowIndex, colIndex)
+                }
+            })
         })
+        container.appendChild(rowDiv)
     })
-    container.appendChild(rowDiv)
-})
+}
 
 function play(columnDiv, rowIndex, colIndex) {
+    const winner = turn % 2 === 0 ? "O" : "X"
     const btnPOne = document.createElement('img')
-    btnPOne.src = `./assets/images/${turn % 2 == 0 ? 'croix.webp' : 'rondelle.png'}`
-    grid[rowIndex][colIndex] = turn % 2 == 0 ? "X" : "O"
+    btnPOne.src = `./assets/images/${turn % 2 === 0 ? 'rondelle.png' : 'croix.webp'}`
+    grid[rowIndex][colIndex] = winner
     columnDiv.appendChild(btnPOne)
     turn++
 
-    checkdraw()
-
-    console.log(grid);
-
-}
-
-
-function checkdraw() {
-
-    if (turn >= 10) {
-        const draw = document.createElement('p')
-
-        draw.textContent = "Egalité , merci de rejouer"
-        document.querySelector("#win").appendChild(draw)
+    if (checkWin(winner)) {
+        displayMessage(`Le joueur ${winner} a gagné !`)
+        gameActive = false
+    } else if (checkDraw()) {
+        displayMessage("Égalité, merci de rejouer !")
+        gameActive = false
     }
-
 }
 
+function checkWin(winner) {
+    for (let i = 0; i < grid.length; i++) {
+        if (grid[i][0] === winner && grid[i][1] === winner && grid[i][2] === winner) {
+            return true
 
-
-/*
-function win(columnDiv, rowIndex, colIndex) {
-    const winner = document.createElement('p')
-
-    if (rowIndex == rowIndex + 1 == rowIndex + 2) {
-        winner = "Tu as gagné"
-        if (colIndex == colIndex + 1 == colIndex + 2) {
-            winner = "Tu as gagné"
-            if ([0, 0] == [1, 1] == [2, 2]) {
-                winner = "Tu as gagné"
-                if ([2, 0] == [1, 1] == [0, 2]) {
-                    winner = "Tu as gagné"
-                }
-            }
         }
     }
 
+    for (let i = 0; i < grid.length; i++) {
+        if (grid[0][i] === winner && grid[1][i] === winner && grid[2][i] === winner) {
+            return true
+
+        }
+    }
+
+    if (grid[0][0] === winner && grid[1][1] === winner && grid[2][2] === winner) {
+        return true
+
+    }
+    if (grid[0][2] === winner && grid[1][1] === winner && grid[2][0] === winner) {
+        return true
+
+    }
+    return false;
+
 }
 
-win()
-*/
+function checkDraw() {
+    return turn === 9
+}
+
+function displayMessage(message) {
+    msgWin.innerHTML = `<p>${message}</p>`
+
+}
+
+function resetGame() {
+    grid = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""],
+    ]
+
+    turn = 0
+    gameActive = true
+    msgWin.innerHTML = ""
+    generate()
+}
+
+generate()
+
+restartButton.addEventListener("click", resetGame);
+
+
+
+
+function randomize(min, max) {
+    return Math.round(Math.random() * (max - min) + min)
+}
+
+
+function playCpu(columnDiv, rowIndex, colIndex) {
+    
+}
